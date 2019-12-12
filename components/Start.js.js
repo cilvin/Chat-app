@@ -17,7 +17,7 @@ export default class Start extends Component {
 
       <View style={styles.container}>
         {/* backgroundimage fullscreen */}
-        <ImageBackground source={require("../assets/BackgroundImage.png")} style={styles.backgroundImage}>
+        <ImageBackground source={require("../assets/Background Image.png")} style={styles.backgroundImage}>
         {/*App title*/}
         <Text style={styles.appTitle}>ChatApp</Text>
         {/*login container*/}
