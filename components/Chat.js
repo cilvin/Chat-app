@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //import relevant components from react native
 import { StyleSheet, Text, View, Platform } from 'react-native';
-import { StyleSheet, Text, View, Platform, AsyncStorage, NetInfo } from 'react-native';
+import { StyleSheet, Text, View, Platform, AsyncStorage, NetInfo, InputToolbar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 // create Screen2 (Chat) class
@@ -69,10 +69,15 @@ export default class Chat extends Component {
   }
 
   componentDidMount() {
+    NetInfo.isConnected.addEventListener(
+      'connectionChange',
+      this.handleConnectivityChange
+  );
+
     NetInfo.isConnected.fetch().then(isConnected => {
       if (isConnected) {
         this.setState({
-          isConnected: false,
+          isConnected: true,
         });
 
         this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -99,6 +104,12 @@ export default class Chat extends Component {
 
   componentWillUnmount() {
     this.unsubscribe();
+    this.authUnsubscribe();
+
+    NetInfo.isConnected.removeEventListener(
+        'connectionChange',
+        this.handleConnectivityChange
+    );
   };
 
   onCollectionUpdate = (querySnapshot) => {
@@ -119,6 +130,20 @@ export default class Chat extends Component {
       messages,
     });
   };
+
+  handleConnectivityChange = (isConnected) => {
+    if(isConnected == true) {
+      this.setState({
+        isConnected: true
+      });
+      this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+    } else {
+      this.setState({
+        isConnected: false
+      });
+    }
+  };
+
 
   addMessage() {
     const message = this.state.messages[0];
