@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 //import relevant components from react native
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import { StyleSheet, Text, View, Platform, AsyncStorage, NetInfo, InputToolbar } from 'react-native';
+import {NetInfo} from 'react-native-netinfo';
+import { StyleSheet, Text, View, Platform, AsyncStorage, InputToolbar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+//import custom CustomActions
+import CustomActions from './CustomActions';
 // create Screen2 (Chat) class
 //import firebase
 const firebase = require('firebase');
@@ -33,7 +35,8 @@ export default class Chat extends Component {
     this.state = {
       messages: [],
       uid: 0,
-      isConnected: false
+      isConnected: false,
+      image: null
     };
   }
 
@@ -122,7 +125,8 @@ export default class Chat extends Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
-        user: data.user
+        user: data.user,
+        image: data.image || null,
       });
     });
 
@@ -151,7 +155,8 @@ export default class Chat extends Component {
       _id: message._id,
       text: message.text,
       createdAt: message.createdAt,
-      user: message.user
+      user: message.user,
+      image: data.image || null
     });
   }
   //define title in navigation bar
@@ -183,6 +188,35 @@ export default class Chat extends Component {
     }
   };
 
+   //display the communication features
+   renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
+  //custom map view
+  renderCustomView (props) {
+   const { currentMessage} = props;
+   if (currentMessage.location) {
+     return (
+         <MapView
+           style={{width: 150,
+             height: 100,
+             borderRadius: 13,
+             margin: 3}}
+           region={{
+             latitude: currentMessage.location.latitude,
+             longitude: currentMessage.location.longitude,
+             latitudeDelta: 0.0922,
+             longitudeDelta: 0.0421,
+           }}
+         />
+     );
+   }
+   return null;
+ }
+
+
+
   //render components
   render() {
     return (
@@ -190,6 +224,8 @@ export default class Chat extends Component {
       <View style={{ flex:1, backgroundColor: this.props.navigation.state.params.backgroundColor }}>
         <GiftedChat
           messages={this.state.messages}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
           onSend={messages => this.onSend(messages)}
           user={{
             _id: this.state.uid
