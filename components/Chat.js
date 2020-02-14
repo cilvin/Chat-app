@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import relevant components from react native
-import {NetInfo} from 'react-native-netinfo';
+import NetInfo from '@react-native-community/netinfo';
 import { StyleSheet, Text, View, Platform, AsyncStorage, InputToolbar } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
