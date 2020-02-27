@@ -71,13 +71,32 @@ export default class Chat extends Component {
     }
   }
 
+  // componentDidMount is a "lifecycle method". Lifecycle methods run the
+  // function at various times during a component's "lifecycle". For example
+  // componentDidMount will run right after the component was added to the page.
   componentDidMount() {
-    NetInfo.isConnected.addEventListener(
-      'connectionChange',
-      this.handleConnectivityChange
-  );
+    // const doGreeting = (name) => {
+    //   alert('Hi ' + name);
+    // }
+    // doGreeting('Cilvin')
+    // NetInfo.addEventListener(state => {
+    //   doGreeting('Luke')
+    // });
 
-    NetInfo.isConnected.fetch().then(isConnected => {
+    // NetInfo is a library that gives you access to the current network status
+    // of the user's device. For example, are we connected or disconnected from
+    // the network.
+
+    // .addEventListener registers a function to be called whenever an "event"
+    // happens, which in this case would be when the connectivity status
+    // changes. The function you give to addEventListener will be called with
+    // the "state" object, which has properties on it like "isConnected".
+     NetInfo.addEventListener(state => {
+      this.handleConnectivityChange(state)
+     })
+
+    NetInfo.fetch().then(state => {
+      const isConnected = state.isConnected;
       if (isConnected) {
         this.setState({
           isConnected: true,
@@ -135,7 +154,8 @@ export default class Chat extends Component {
     });
   };
 
-  handleConnectivityChange = (isConnected) => {
+  handleConnectivityChange = (state) => {
+    const isConnected = state.isConnected;
     if(isConnected == true) {
       this.setState({
         isConnected: true
