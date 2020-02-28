@@ -102,9 +102,9 @@ export default class Chat extends Component {
           isConnected: true,
         });
 
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
           if (!user) {
-            firebase.auth().signInAnonymously();
+            await firebase.auth().signInAnonymously();
           }
 
           this.setState({
@@ -176,7 +176,7 @@ export default class Chat extends Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      image: data.image || null
+      image: message.image || null
     });
   }
   //define title in navigation bar
