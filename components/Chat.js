@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 //import relevant components from react native
 import NetInfo from '@react-native-community/netinfo';
-import { StyleSheet, Text, View, Platform, AsyncStorage, InputToolbar } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { StyleSheet, Text, View, Platform, AsyncStorage } from 'react-native';
+import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 //import custom CustomActions
 import CustomActions from './CustomActions';
@@ -198,7 +198,8 @@ export default class Chat extends Component {
 
   // hide inputbar when offline
   renderInputToolbar(props) {
-    if (this.state.isConnected == false) {
+    console.log('renderInputToolbar --> props', props.isConnected);
+    if (props.isConnected === false) {
     } else {
       return(
         <InputToolbar
@@ -244,6 +245,8 @@ export default class Chat extends Component {
       <View style={{ flex:1, backgroundColor: this.props.navigation.state.params.backgroundColor }}>
         <GiftedChat
           messages={this.state.messages}
+          isConnected={this.state.isConnected}
+          renderInputToolbar={this.renderInputToolbar}
           renderActions={this.renderCustomActions}
           renderCustomView={this.renderCustomView}
           onSend={messages => this.onSend(messages)}
