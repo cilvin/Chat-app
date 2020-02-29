@@ -6,6 +6,8 @@ import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 //import custom CustomActions
 import CustomActions from './CustomActions';
+//import MapView
+import MapView from 'react-native-maps';
 // create Screen2 (Chat) class
 //import firebase
 const firebase = require('firebase');
@@ -142,10 +144,12 @@ export default class Chat extends Component {
       var data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || '',
         createdAt: data.createdAt.toDate(),
         user: data.user,
         image: data.image || null,
+        location: data.location || null,
+       
       });
     });
 
@@ -173,10 +177,11 @@ export default class Chat extends Component {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
       _id: message._id,
-      text: message.text,
+      text: message.text || '',
       createdAt: message.createdAt,
       user: message.user,
-      image: message.image || null
+      image: message.image || null,
+      location: message.location || null,
     });
   }
   //define title in navigation bar
