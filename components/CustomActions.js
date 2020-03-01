@@ -7,6 +7,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 //import permissions and imagepicker
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from 'expo-location';
 //import firebase
 const firebase = require("firebase");
 require("firebase/firestore");
