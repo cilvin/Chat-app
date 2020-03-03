@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 //import relevant components from react native
-import NetInfo from '@react-native-community/netinfo';
-import { StyleSheet, Text, View, Platform, AsyncStorage } from 'react-native';
-import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+import NetInfo from "@react-native-community/netinfo";
+import { StyleSheet, Text, View, Platform, AsyncStorage } from "react-native";
+import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 //import custom CustomActions
-import CustomActions from './CustomActions';
+import CustomActions from "./CustomActions";
 //import MapView
-import MapView from 'react-native-maps';
+import MapView from "react-native-maps";
+
 // create Screen2 (Chat) class
 //import firebase
-const firebase = require('firebase');
-require('firebase/firestore');
+const firebase = require("firebase");
+require("firebase/firestore");
 
 // create Screen2 (Chat) class
 export default class Chat extends Component {
-
   constructor() {
     super();
 
@@ -27,12 +27,11 @@ export default class Chat extends Component {
         projectId: "test-d614c",
         storageBucket: "test-d614c.appspot.com",
         messagingSenderId: "799483602316",
-        appId: "1:799483602316:web:0eaaf90d0b214244b822a9",
+        appId: "1:799483602316:web:0eaaf90d0b214244b822a9"
       });
     }
 
-    
-    this.referenceChatMessages = firebase.firestore().collection('messages');
+    this.referenceChatMessages = firebase.firestore().collection("messages");
 
     this.state = {
       messages: [],
@@ -43,10 +42,10 @@ export default class Chat extends Component {
   }
 
   // get messages from asyncStorage
-  async getMessages() {
-    let messages = '';
+  getMessages = async () => {
+    let messages = "";
     try {
-      messages = await AsyncStorage.getItem('messages') || [];
+      messages = (await AsyncStorage.getItem("messages")) || [];
       this.setState({
         messages: JSON.parse(messages)
       });
@@ -56,22 +55,25 @@ export default class Chat extends Component {
   };
 
   // save messages in asyncStorage
-  async saveMessages() {
+  saveMessages = async () => {
     try {
-      await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
+      await AsyncStorage.setItem(
+        "messages",
+        JSON.stringify(this.state.messages)
+      );
     } catch (error) {
       console.log(error.message);
     }
   };
 
   // delete messages from asyncStorage
-  async deleteMessages() {
+  deleteMessages = async () => {
     try {
-      await AsyncStorage.removeItem('messages');
+      await AsyncStorage.removeItem("messages");
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   // componentDidMount is a "lifecycle method". Lifecycle methods run the
   // function at various times during a component's "lifecycle". For example
@@ -93,32 +95,36 @@ export default class Chat extends Component {
     // happens, which in this case would be when the connectivity status
     // changes. The function you give to addEventListener will be called with
     // the "state" object, which has properties on it like "isConnected".
-     NetInfo.addEventListener(state => {
-      this.handleConnectivityChange(state)
-     })
+    NetInfo.addEventListener(state => {
+      this.handleConnectivityChange(state);
+    });
 
     NetInfo.fetch().then(state => {
       const isConnected = state.isConnected;
       if (isConnected) {
         this.setState({
-          isConnected: true,
+          isConnected: true
         });
 
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
-          if (!user) {
-            await firebase.auth().signInAnonymously();
-          }
+        this.authUnsubscribe = firebase
+          .auth()
+          .onAuthStateChanged(async user => {
+            if (!user) {
+              await firebase.auth().signInAnonymously();
+            }
 
-          this.setState({
-            uid: user.uid,
-            messages: []
+            this.setState({
+              uid: user.uid,
+              messages: []
+            });
+
+            this.unsubscribe = this.referenceChatMessages
+              .orderBy("createdAt", "desc")
+              .onSnapshot(this.onCollectionUpdate);
           });
-
-          this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
-        });
       } else {
         this.setState({
-          isConnected: false,
+          isConnected: false
         });
 
         this.getMessages();
@@ -131,40 +137,41 @@ export default class Chat extends Component {
     this.authUnsubscribe();
 
     NetInfo.isConnected.removeEventListener(
-        'connectionChange',
-        this.handleConnectivityChange
+      "connectionChange",
+      this.handleConnectivityChange
     );
-  };
+  }
 
-  onCollectionUpdate = (querySnapshot) => {
+  onCollectionUpdate = querySnapshot => {
     const messages = [];
     // go through each document
-    querySnapshot.forEach((doc) => {
+    querySnapshot.forEach(doc => {
       // get the QueryDocumentSnapshot's data
-      var data = doc.data();
+      let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text || '',
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
         user: data.user,
         image: data.image || null,
-        location: data.location || null,
-       
+        location: data.location || null
       });
     });
 
     this.setState({
-      messages,
+      messages
     });
   };
 
-  handleConnectivityChange = (state) => {
+  handleConnectivityChange = state => {
     const isConnected = state.isConnected;
-    if(isConnected == true) {
+    if (isConnected == true) {
       this.setState({
         isConnected: true
       });
-      this.unsubscribe = this.referenceChatMessages.orderBy('createdAt', 'desc').onSnapshot(this.onCollectionUpdate);
+      this.unsubscribe = this.referenceChatMessages
+        .orderBy("createdAt", "desc")
+        .onSnapshot(this.onCollectionUpdate);
     } else {
       this.setState({
         isConnected: false
@@ -172,82 +179,80 @@ export default class Chat extends Component {
     }
   };
 
-
-  addMessage() {
+  addMessage = () => {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
       _id: message._id,
-      text: message.text || '',
+      text: message.text || "",
       createdAt: message.createdAt,
       user: message.user,
       image: message.image || null,
-      location: message.location || null,
+      location: message.location || null
     });
   }
   //define title in navigation bar
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.state.params.userName,
+      title: `${navigation.state.params.userName}'s Chat`,
     };
   };
 
   //appending new message to messages object
-  onSend(messages = []) {
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }), () => {
-      this.addMessage();
-      this.saveMessages();
-    });
-  };
+  onSend = (messages = []) => {
+    this.setState(
+      previousState => ({
+        messages: GiftedChat.append(previousState.messages, messages)
+      }),
+      () => {
+        this.addMessage();
+        this.saveMessages();
+      }
+    );
+  }
 
   // hide inputbar when offline
-  renderInputToolbar(props) {
-    console.log('renderInputToolbar --> props', props.isConnected);
+  renderInputToolbar = (props) => {
+    console.log("renderInputToolbar --> props", props.isConnected);
     if (props.isConnected === false) {
     } else {
-      return(
-        <InputToolbar
-        {...props}
-        />
-      );
+      return <InputToolbar {...props} />;
     }
-  };
+  }
 
-   //display the communication features
-   renderCustomActions = (props) => {
+  //display the communication features
+  renderCustomActions = props => {
     return <CustomActions {...props} />;
   };
 
   //custom map view
-  renderCustomView (props) {
-   const { currentMessage} = props;
-   if (currentMessage.location) {
-     return (
-         <MapView
-           style={{width: 150,
-             height: 100,
-             borderRadius: 13,
-             margin: 3}}
-           region={{
-             latitude: currentMessage.location.latitude,
-             longitude: currentMessage.location.longitude,
-             latitudeDelta: 0.0922,
-             longitudeDelta: 0.0421,
-           }}
-         />
-     );
-   }
-   return null;
- }
-
-
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+          }}
+        />
+      );
+    }
+    return null;
+  }
 
   //render components
   render() {
     return (
       //fullscreen component
-      <View style={{ flex:1, backgroundColor: this.props.navigation.state.params.backgroundColor }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: this.props.navigation.state.params.backgroundColor
+        }}
+      >
         <GiftedChat
           messages={this.state.messages}
           isConnected={this.state.isConnected}
@@ -259,12 +264,10 @@ export default class Chat extends Component {
             _id: this.state.uid
           }}
         />
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null }
+        {Platform.OS === "android" ? <KeyboardSpacer /> : null}
       </View>
     );
   }
-};
+}
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
