@@ -4,10 +4,10 @@
  * @class Chat
  * @requires React
  * @requires React-Native
- * @requires Keyboard Spacer
+ * @requires Keyboard-Spacer
  * @requires React-Native-Gifted-Chat
- * @requires Custom Actions
- * @requires React Native Maps
+ * @requires CustomActions
+ * @requires React-Native-Maps
  * @requires Firebase
  * @requires Firestore
  */
@@ -70,6 +70,7 @@ export default class Chat extends Component {
 
   /**
    * loads all messages from AsyncStorage
+   * @function getMessages 
    * @async
    * @return {Promise<string>} The data from the storage
    */
@@ -87,6 +88,7 @@ export default class Chat extends Component {
 
   /**
    * saves all messages from AsyncStorage
+   * @function saveMessages 
    * @async
    */
   saveMessages = async () => {
@@ -102,6 +104,7 @@ export default class Chat extends Component {
 
   /**
    * deletes all messages from AsyncStorage
+   * @function deleteMessages
    * @async
    */
 
@@ -282,7 +285,10 @@ export default class Chat extends Component {
     );
   };
 
-  // hide inputbar when offline
+ /**
+  * hides inputbar when offline
+  * @function renderInputToolbar
+  */
   renderInputToolbar = props => {
     console.log("renderInputToolbar --> props", props.isConnected);
     if (props.isConnected === false) {
@@ -290,8 +296,11 @@ export default class Chat extends Component {
       return <InputToolbar {...props} />;
     }
   };
-
-  //display the communication features
+  
+ /**
+  * displays the communication features
+  * @function renderCustomActions
+  */
   renderCustomActions = props => <CustomActions {...props} />;
 
   //custom map view
