@@ -1,3 +1,13 @@
+/**
+* @description this is the startscreen, where the user can type his name
+* and choose a background-color for the chatscreen
+* @class Start
+* @requires React
+* @requires React-Native
+*/
+
+
+
 import React, { Component } from 'react';
 //import relevant components from react native
 import { StyleSheet, Text, View, TextInput, Button, Alert, ImageBackground, TouchableOpacity } from 'react-native';
@@ -8,14 +18,14 @@ export default class Start extends Component {
   // define state
   state = {
     userName: '',
-    backgroundColor: ''
+    backgroundColor: '',
   }
 
   //render components
   render() {
     return (
 
-        <ImageBackground source={require("../assets/Background-Image.png")} style={styles.backgroundImage}>
+        <ImageBackground source={require('../assets/Background-Image.png')} style={styles.backgroundImage}>
           {/*App title*/}
           <Text style={styles.appTitle}>ChatApp</Text>
           {/*login container*/}
@@ -65,7 +75,7 @@ export default class Start extends Component {
         </ImageBackground>
     );
   }
-};
+}
 
 //stylesheets
 const styles = StyleSheet.create({

@@ -13,10 +13,10 @@ const navigator = createStackNavigator({
   Start: {
     screen: Start,
     navigationOptions: {
-      header: null
-    } 
+      header: null,
+    }, 
   },
-  Chat: { screen: Chat }
+  Chat: { screen: Chat },
 });
 
 const navigatorContainer = createAppContainer(navigator);

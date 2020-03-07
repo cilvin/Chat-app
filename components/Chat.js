@@ -1,3 +1,18 @@
+/**
+ * @description this is the chatscreen, where the user can write and sent
+ * messages, images or geo-location
+ * @class Chat
+ * @requires React
+ * @requires React-Native
+ * @requires Keyboard Spacer
+ * @requires React-Native-Gifted-Chat
+ * @requires Custom Actions
+ * @requires React Native Maps
+ * @requires Firebase
+ * @requires Firestore
+ */
+
+//  import react component
 import React, { Component } from "react";
 //import relevant components from react native
 import NetInfo from "@react-native-community/netinfo";
@@ -18,6 +33,18 @@ require("firebase/firestore");
 export default class Chat extends Component {
   constructor() {
     super();
+
+    /**
+     * initializing firebase
+     * @param {object} firebaseConfig
+     * @param {string} apiKey
+     * @param {string} authDomain
+     * @param {string} databaseURL
+     * @param {string} projectID
+     * @param {string} storageBucket
+     * @param {string} messagingSenderId
+     * @param {string} appId
+     */
 
     if (!firebase.apps.length) {
       firebase.initializeApp({
@@ -41,7 +68,11 @@ export default class Chat extends Component {
     };
   }
 
-  // get messages from asyncStorage
+  /**
+   * loads all messages from AsyncStorage
+   * @async
+   * @return {Promise<string>} The data from the storage
+   */
   getMessages = async () => {
     let messages = "";
     try {
@@ -54,7 +85,10 @@ export default class Chat extends Component {
     }
   };
 
-  // save messages in asyncStorage
+  /**
+   * saves all messages from AsyncStorage
+   * @async
+   */
   saveMessages = async () => {
     try {
       await AsyncStorage.setItem(
@@ -66,7 +100,11 @@ export default class Chat extends Component {
     }
   };
 
-  // delete messages from asyncStorage
+  /**
+   * deletes all messages from AsyncStorage
+   * @async
+   */
+
   deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem("messages");
@@ -142,12 +180,25 @@ export default class Chat extends Component {
     );
   }
 
+  /**
+   * onCollectionUpdte takes snapshot on collection update
+   * @function onCollectionUpdate
+   * @param {string} _id
+   * @param {string} text
+   * @param {number} created.At
+   * @param {object} user
+   * @param {string} user._id
+   * @param {string} image
+   * @param {object} location
+   * @param {number} location.longitude
+   * @param {number} location.latitude
+   */
   onCollectionUpdate = querySnapshot => {
     const messages = [];
     // go through each document
     querySnapshot.forEach(doc => {
       // get the QueryDocumentSnapshot's data
-      let data = doc.data();
+      const data = doc.data();
       messages.push({
         _id: data._id,
         text: data.text || "",
@@ -163,6 +214,10 @@ export default class Chat extends Component {
     });
   };
 
+  /**
+   * checks networkstatus of user
+   * @function handleConnectivityChange
+   */
   handleConnectivityChange = state => {
     const isConnected = state.isConnected;
     if (isConnected == true) {
@@ -179,6 +234,19 @@ export default class Chat extends Component {
     }
   };
 
+  /**
+   * adds the message object to firestore, fired by onSend function
+   * @function addMessage
+   * @param {string} _id
+   * @param {string} text
+   * @param {number} created.At
+   * @param {object} user
+   * @param {string} user._id
+   * @param {string} image
+   * @param {object} location
+   * @param {number} location.longitude
+   * @param {number} location.latitude
+   */
   addMessage = () => {
     const message = this.state.messages[0];
     this.referenceChatMessages.add({
@@ -189,15 +257,19 @@ export default class Chat extends Component {
       image: message.image || null,
       location: message.location || null
     });
-  }
+  };
   //define title in navigation bar
   static navigationOptions = ({ navigation }) => {
     return {
-      title: `${navigation.state.params.userName}'s Chat`,
+      title: `${navigation.state.params.userName}'s Chat`
     };
   };
 
-  //appending new message to messages object
+  /**
+   * handles actions when user hits send-button
+   * @function onSend
+   * @param {object} messages
+   */
   onSend = (messages = []) => {
     this.setState(
       previousState => ({
@@ -208,21 +280,19 @@ export default class Chat extends Component {
         this.saveMessages();
       }
     );
-  }
+  };
 
   // hide inputbar when offline
-  renderInputToolbar = (props) => {
+  renderInputToolbar = props => {
     console.log("renderInputToolbar --> props", props.isConnected);
     if (props.isConnected === false) {
     } else {
       return <InputToolbar {...props} />;
     }
-  }
+  };
 
   //display the communication features
-  renderCustomActions = props => {
-    return <CustomActions {...props} />;
-  };
+  renderCustomActions = props => <CustomActions {...props} />;
 
   //custom map view
   renderCustomView(props) {

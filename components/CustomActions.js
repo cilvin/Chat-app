@@ -1,4 +1,17 @@
-//import PropTypes
+/**
+* @description this file handles the CustomAction button in text input field
+* @class CustomActions
+* @requires React
+* @requires React-Native
+* @requires Prop-Types
+* @requires Expo-Image-Picker
+* @requires Expo-Permissions
+* @requires Expo-Location
+* @requires Firebase
+* @requires Firestore
+*/
+
+//  import PropTypes
 import PropTypes from "prop-types";
 //import react
 import React from "react";
@@ -13,7 +26,10 @@ const firebase = require("firebase");
 require("firebase/firestore");
 
 export default class CustomActions extends React.Component {
-  // function to pick images from camera roll
+/**
+  * Let the user pick an image from the device's image library
+  * @async
+  */
   imagePicker = async () => {
     // expo permission
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -34,7 +50,10 @@ export default class CustomActions extends React.Component {
     }
   };
 
-  //take photo with device
+  /**
+  * Let the user take a photo with device's camera
+  * @async
+  */
   takePhoto = async () => {
     const { status } = await Permissions.askAsync(
       Permissions.CAMERA,
@@ -56,7 +75,10 @@ export default class CustomActions extends React.Component {
     }
   };
 
-  //send location using GPS
+  /**
+  * get the location of the user by using GPS
+  * @async
+  */
   getLocation = async () => {
     try {
       const { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -71,7 +93,7 @@ export default class CustomActions extends React.Component {
             location: {
               longitude: result.coords.longitude,
               latitude: result.coords.latitude
-            }
+            },
           });
         }
       }
@@ -80,7 +102,10 @@ export default class CustomActions extends React.Component {
     }
   };
 
-  // upload image to firebase with XMLHttpRequest
+  /**
+  * Upload images to firebase
+  * @async
+  */
   uploadImageFetch = async uri => {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -102,7 +127,7 @@ export default class CustomActions extends React.Component {
     const ref = firebase
       .storage()
       .ref()
-      .child("images/" + imageName);
+      .child(`images/${imageName}`);
 
     const snapshot = await ref.put(blob);
 
@@ -111,7 +136,10 @@ export default class CustomActions extends React.Component {
     return await snapshot.ref.getDownloadURL();
   };
 
-  //function that handles communication features
+   /**
+  * function that handles communication features
+  * @function onActionPress
+  */
   onActionPress = () => {
     const options = [
       "Choose From Library",
