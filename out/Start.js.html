@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Start.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Start.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* @description this is the startscreen, where the user can type his name
+* and choose a background-color for the chatscreen
+* @class Start
+* @requires React
+* @requires React-Native
+*/
+
+
+
+import React, { Component } from 'react';
+//import relevant components from react native
+import { StyleSheet, Text, View, TextInput, Button, Alert, ImageBackground, TouchableOpacity } from 'react-native';
+
+// create Screen1 (Start) class
+export default class Start extends Component {
+
+  // define state
+  state = {
+    userName: '',
+    backgroundColor: '',
+  }
+
+  //render components
+  render() {
+    return (
+
+        &lt;ImageBackground source={require('../assets/Background-Image.png')} style={styles.backgroundImage}>
+          {/*App title*/}
+          &lt;Text style={styles.appTitle}>ChatApp&lt;/Text>
+          {/*login container*/}
+          &lt;View style={styles.logIn}>
+            {/*textinput form*/}
+            &lt;TextInput
+              style={styles.userNameInput}
+              onChangeText={(userName) => this.setState({userName})}
+              value={this.state.userName}
+              placeholder='Your Name...'
+            />
+            {/*choose backgroundcolor*/}
+            &lt;Text style={styles.choseBackgroundColor}>Choose Background Color:&lt;/Text>
+            {/*wrapper for the different available background colors*/}
+            &lt;View style={styles.backgroundColorWrapper}>
+              {/*black*/}
+              &lt;TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#090C08' }) }}>
+                &lt;View style={[styles.backgroundColor, styles.black]} >
+                &lt;/View>
+              &lt;/TouchableOpacity>
+              {/*purple*/}
+              &lt;TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#474056' }) }}>
+                &lt;View style={[styles.backgroundColor, styles.purple]}>
+                &lt;/View>
+              &lt;/TouchableOpacity>
+              {/*gray*/}
+              &lt;TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#8A95A5' }) }}>
+                &lt;View style={[styles.backgroundColor, styles.gray]}>
+                &lt;/View>
+              &lt;/TouchableOpacity>
+              {/*green*/}
+              &lt;TouchableOpacity onPress={()=> { this.setState({ backgroundColor: '#B9C6AE' }) }}>
+                &lt;View style={[styles.backgroundColor, styles.green]}>
+                &lt;/View>
+              &lt;/TouchableOpacity>
+            &lt;/View>
+            {/*start chatting button --> directs you to conversation screen*/}
+            &lt;Button
+              onPress={() => {
+                this.props.navigation.navigate('Chat', { userName: this.state.userName, backgroundColor: this.state.backgroundColor });
+              }}
+              title="Start Chatting"
+              color = '#757083'
+              style={styles.startChatButton}
+            />
+          &lt;/View>
+        &lt;/ImageBackground>
+    );
+  }
+}
+
+//stylesheets
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    resizeMode: 'cover'
+  },
+  logIn: {
+    height: '44%',
+    width: '88%',
+    backgroundColor: 'white',
+    marginBottom: '6%',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  appTitle: {
+    fontSize: 45,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    marginTop: '6%'
+  },
+  userNameInput: {
+    width: '88%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    fontSize: 16,
+    color: '#757083',
+    fontWeight: '300',
+    opacity: 0.5
+  },
+  startChatButton: {
+    width: '88%',
+    height: 40,
+    fontSize: 16,
+    fontWeight: '600',
+    backgroundColor: '#757083'
+  },
+  choseBackgroundColor: {
+    width: '88%',
+    fontSize: 16,
+    fontWeight: '300',
+    color: '#757083'
+  },
+  backgroundColorWrapper: {
+    width: '88%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  backgroundColor: {
+    height: 40,
+    width: 40,
+    borderRadius: 40/2,
+    marginLeft: 15
+  },
+  black: {
+    backgroundColor: '#090C08'
+  },
+  purple: {
+    backgroundColor: '#474056'
+  },
+  gray: {
+    backgroundColor: '#8A95A5'
+  },
+  green: {
+    backgroundColor: '#B9C6AE'
+  },
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="CustomActions.html">CustomActions</a></li><li><a href="Start.html">Start</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#handleConnectivityChange">handleConnectivityChange</a></li><li><a href="global.html#onActionPress">onActionPress</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#onSend">onSend</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Fri Mar 06 2020 18:15:24 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
