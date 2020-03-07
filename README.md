@@ -1,6 +1,5 @@
 # Introduction
-This is a chat app where users can registrate and send text messages as well as
- pictures from their device and share their location.
+This is a chat app where users can registrate and send text messages as well as pictures from their device and share their location.
 
 
 # Get started
@@ -43,3 +42,6 @@ run `npm install` to install all the modules.
 
 ## Libraries
 [GiftedChat](https://github.com/FaridSafi/react-native-gifted-chat)
+
+## Trello Board for Native Chat App
+https://trello.com/b/U04QicDb/native-mobile-chat-app
